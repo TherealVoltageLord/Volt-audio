@@ -1,12 +1,21 @@
 {
     "name": "Volt Audio",
     "short_name": "Volt Audio",
-    "description": "Convert text to speech and download with ease!",
+    "description": "Convert text to speech and download as MP3, WAV, or OGG.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#cce7ff",
+    "background_color": "#003366",
     "theme_color": "#003366",
     "icons": [
-        { "src": "https://ibb.co/1Y75Qdhr", "sizes": "192x192", "type": "image/png" }
+        {
+            "src": "volt_audio_192×192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
     ]
 }
