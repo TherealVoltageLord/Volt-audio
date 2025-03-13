@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert your text into high-quality speech with Volt Audio. Download and share with ease.">
+    <meta name="theme-color" content="#003366">
+    <meta property="og:title" content="Volt Audio - Text to Speech">
+    <meta property="og:description" content="Convert your text into speech and share it instantly.">
+    <meta property="og:image" content="https://ibb.co/1Y75Qdhr">
+    <meta property="og:url" content="https://volt-audio.onrender.com/">
     <title>Volt Audio - Text to Speech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background: #cce7ff; color: #003366; margin: 0; padding: 0; }
         .container { max-width: 500px; margin: 50px auto; padding: 20px; background: #99c2ff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 51, 102, 0.5); }
@@ -12,10 +19,7 @@
         textarea { width: 100%; height: 100px; margin: 10px 0; padding: 10px; border: none; border-radius: 5px; font-size: 16px; }
         button { background: #003366; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 5px; transition: 0.3s; }
         button:hover { background: #002244; }
-        .audio-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; position: relative; }
-        .dropdown { position: absolute; display: none; background: #003366; color: white; border-radius: 5px; top: 40px; padding: 5px 0; width: 120px; }
-        .dropdown a { display: block; padding: 8px; text-decoration: none; color: white; font-size: 14px; }
-        .dropdown a:hover { background: #002244; }
+        .audio-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         select { padding: 5px; font-size: 14px; border-radius: 5px; }
         footer { margin-top: 20px; padding: 10px; font-size: 14px; background: #003366; color: white; }
     </style>
@@ -32,10 +36,6 @@
             <button id="pauseBtn"><i class="fas fa-pause"></i></button>
             <button id="downloadBtn"><i class="fas fa-download"></i></button>
             <button id="shareBtn"><i class="fas fa-share"></i></button>
-            <div class="dropdown" id="shareDropdown">
-                <a href="#" id="shareWhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="#" id="shareTelegram"><i class="fab fa-telegram"></i> Telegram</a>
-            </div>
             <select id="speedControl">
                 <option value="0.5">0.5x</option>
                 <option value="1" selected>1x</option>
@@ -72,45 +72,42 @@
 
         document.getElementById("downloadBtn").addEventListener("click", () => {
             if (!audioBlob) { document.getElementById("statusMessage").textContent = "Generate audio first!"; return; }
-            document.getElementById("statusMessage").textContent = "Downloading...";
-            const filename = `volt-audio-${Math.random().toString(36).substring(7)}.mp3`;
+            const filename = `volt-audio-${Date.now()}.mp3`;
             const a = document.createElement("a");
             a.href = URL.createObjectURL(audioBlob);
             a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            document.getElementById("statusMessage").textContent = "File downloaded successfully!";
         });
 
-        document.getElementById("shareBtn").addEventListener("click", () => {
-            const dropdown = document.getElementById("shareDropdown");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        document.getElementById("shareBtn").addEventListener("click", async () => {
+            if (!audioBlob) return;
+            const file = new File([audioBlob], `volt-audio-${Date.now()}.mp3`, { type: "audio/mp3" });
+            if (navigator.share) {
+                await navigator.share({ files: [file], text: "Made with ❤ by Voltage Lord" });
+            } else { alert("Sharing not supported on this browser."); }
         });
 
-        async function shareAudio(platform) {
-            if (!audioBlob) { document.getElementById("statusMessage").textContent = "Generate audio first!"; return; }
-            const file = new File([audioBlob], `volt-audio-${Math.random().toString(36).substring(7)}.mp3`, { type: "audio/mp3" });
-            const text = "Made with Love❤\n < Voltage Lord";
-            try {
-                if (navigator.share) {
-                    await navigator.share({ files: [file], text });
-                } else {
-                    alert("Sharing not supported on this browser.");
-                }
-            } catch (err) { console.error("Error sharing:", err); }
+        // Install Prompt
+        let deferredPrompt;
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.createElement("button");
+            installBtn.innerHTML = "<i class='fas fa-download'></i> Install Volt Audio";
+            installBtn.style.cssText = "background: #ff6600; color: white; padding: 10px; border: none; border-radius: 5px;";
+            document.body.appendChild(installBtn);
+            installBtn.addEventListener("click", async () => {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                installBtn.remove();
+            });
+        });
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js");
         }
-
-        document.getElementById("shareWhatsApp").addEventListener("click", (e) => { e.preventDefault(); shareAudio("whatsapp"); });
-        document.getElementById("shareTelegram").addEventListener("click", (e) => { e.preventDefault(); shareAudio("telegram"); });
-
-        document.addEventListener("click", (e) => {
-            if (!document.getElementById("shareBtn").contains(e.target) && !document.getElementById("shareDropdown").contains(e.target)) {
-                document.getElementById("shareDropdown").style.display = "none";
-            }
-        });
-
-        document.getElementById("speedControl").addEventListener("change", (e) => document.getElementById("audioPlayer").playbackRate = e.target.value);
     </script>
 </body>
 </html>
