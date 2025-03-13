@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#003366">
+    <title>Help & Support - Volt Audio</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #cce7ff; color: #003366; padding: 20px; }
+        .container { max-width: 600px; margin: auto; padding: 20px; background: #99c2ff; border-radius: 10px; }
+        h1 { font-size: 24px; margin-bottom: 15px; }
+        h2 { font-size: 20px; margin-top: 20px; }
+        .faq-item { background: #fff; border-radius: 5px; margin: 10px 0; padding: 10px; cursor: pointer; }
+        .faq-answer { display: none; padding-top: 5px; color: #444; }
+        .contact a { display: block; margin: 10px 0; color: #003366; text-decoration: none; font-size: 16px; }
+        .contact a:hover { color: #002244; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1><i class="fas fa-info-circle"></i> About Volt Audio</h1>
+        <p>Volt Audio is a powerful text-to-speech tool that allows you to convert text into audio and download it in various formats.</p>
+
+        <h2><i class="fas fa-question-circle"></i> Help Topics</h2>
+        <div class="faq-item" onclick="toggleAnswer(1)">
+            <strong>How do I convert text to speech? <i class="fas fa-chevron-down"></i></strong>
+            <p class="faq-answer" id="answer1">Simply type your text in the box, click "Convert", and download your audio.</p>
+        </div>
+        <div class="faq-item" onclick="toggleAnswer(2)">
+            <strong>Which audio formats are supported? <i class="fas fa-chevron-down"></i></strong>
+            <p class="faq-answer" id="answer2">Volt Audio supports MP3, WAV, and OGG formats.</p>
+        </div>
+        <div class="faq-item" onclick="toggleAnswer(3)">
+            <strong>How can I install Volt Audio as an app? <i class="fas fa-chevron-down"></i></strong>
+            <p class="faq-answer" id="answer3">Click the install prompt when it appears, or go to your browser menu and select "Install".</p>
+        </div>
+
+        <h2><i class="fas fa-envelope"></i> Contact Support</h2>
+        <div class="contact">
+            <a href="mailto:odunayoayinla23@gmail.com"><i class="fas fa-envelope"></i> Email Support</a>
+            <a href="https://wa.me/2347045674902?text=I'm+a+user+on+Volt+Audio"><i class="fab fa-whatsapp"></i> WhatsApp Support</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById('answer' + id);
+            answer.style.display = answer.style.display === "block" ? "none" : "block";
+        }
+    </script>
+
+</body>
+</html>
